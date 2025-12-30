@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Đặt vé xem phim</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <h1>ĐẶT VÉ XEM PHIM CGV STYLE</h1>
+        <div class="screen">MÀN HÌNH</div>
+
+        <div class="container">
+            <div id="seats"></div>
+
+            <div class="summary">
+                <h3>GHẾ BẠN CHỌN</h3>
+                <ul id="selectedSeats"></ul>
+                <p>Tổng tiền: <span id="total">0</span> VNĐ</p>
+                <button id="confirm">XÁC NHẬN ĐẶT VÉ</button>
+            </div>
+        </div>
+
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="client.js"></script>
+    </body>
+</html>
