@@ -2,20 +2,38 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8" />
-        <title>Đặt vé xem phim</title>
+        <title>Đặt vé CGV</title>
+        <!-- <link rel="stylesheet" href="./reset.css" /> -->
         <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body>
-        <h1>ĐẶT VÉ XEM PHIM CGV STYLE</h1>
+        <header>
+            <h1>🎬 ĐẶT VÉ XEM PHIM CGV</h1>
+        </header>
+
         <div class="screen">MÀN HÌNH</div>
 
-        <div class="container">
-            <div id="seats"></div>
+        <div class="main">
+            <div class="cinema">
+                <div id="seats"></div>
+
+                <div class="note">
+                    <span class="box available"></span> Ghế trống
+                    <span class="box selected"></span> Ghế đang chọn
+                    <span class="box booked"></span> Ghế đã đặt
+                </div>
+            </div>
 
             <div class="summary">
-                <h3>GHẾ BẠN CHỌN</h3>
+                <h3>🎟 GHẾ BẠN CHỌN</h3>
                 <ul id="selectedSeats"></ul>
-                <p>Tổng tiền: <span id="total">0</span> VNĐ</p>
+                <p class="total">Tổng tiền: <span id="total">0</span> VNĐ</p>
                 <button id="confirm">XÁC NHẬN ĐẶT VÉ</button>
             </div>
         </div>

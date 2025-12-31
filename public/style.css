@@ -1,60 +1,147 @@
-body {
-    background: #111;
-    color: #fff;
-    font-family: Arial;
-    text-align: center;
+* {
+    box-sizing: border-box;
 }
 
-h1 {
+body {
+    margin: 0;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    font-family: poppins, sans-serif;
+    color: #fff;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 15px;
+    background: #000;
     color: gold;
 }
 
+/* SCREEN */
 .screen {
-    background: orange;
-    padding: 10px;
-    width: 60%;
-    margin: 10px auto;
-    border-radius: 10px;
+    width: 70%;
+    margin: 20px auto;
+    background: #f39c12;
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
 }
 
-.container {
+/* MAIN LAYOUT */
+.main {
     display: flex;
     justify-content: center;
     gap: 40px;
+    padding: 20px;
 }
 
+/* CINEMA */
+.cinema {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* SEATS */
 #seats {
     display: grid;
-    grid-template-columns: repeat(12, 50px);
-    gap: 8px;
+    grid-template-columns: repeat(12, 48px);
+    gap: 10px;
+    justify-content: center;
 }
 
 .seat {
-    width: 50px;
-    height: 40px;
+    width: 48px;
+    height: 38px;
     border-radius: 6px;
-    cursor: pointer;
-    line-height: 40px;
     font-size: 12px;
+    line-height: 38px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
 }
 
+/* SEAT STATES */
 .available {
-    background: white;
-    color: black;
+    background: #ecf0f1;
+    color: #000;
+}
+
+.available:hover {
+    background: #bdc3c7;
 }
 
 .selected {
-    background: limegreen;
+    background: #2ecc71;
+    color: #000;
 }
 
 .booked {
-    background: orange;
+    background: #e67e22;
     cursor: not-allowed;
 }
 
+/* NOTE */
+.note {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 14px;
+}
+
+.box {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 4px;
+}
+
+/* SUMMARY */
 .summary {
-    text-align: left;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 15px;
-    border-radius: 10px;
+    width: 260px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.summary h3 {
+    color: gold;
+    margin-bottom: 10px;
+}
+
+.summary ul {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.summary li {
+    border-bottom: 1px solid #444;
+    padding: 5px 0;
+}
+
+.total {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 10px;
+    background: gold;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: orange;
 }

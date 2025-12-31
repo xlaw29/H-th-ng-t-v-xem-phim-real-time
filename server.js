@@ -6,55 +6,78 @@ const io = new Server(server, {
     cors: { origin: "*" },
 });
 
-// Tạo sơ đồ ghế
 const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const cols = 12;
 
-// seatMap: A1 -> available | selected | booked
+// seatMap: A1 -> { status, owner }
 let seatMap = {};
 rows.forEach((r) => {
     for (let i = 1; i <= cols; i++) {
-        seatMap[`${r}${i}`] = "available";
+        seatMap[`${r}${i}`] = {
+            status: "available",
+            owner: null,
+        };
     }
 });
 
-io.on("connection", (socket) => {
-    console.log("Client connected:", socket.id);
+// Gửi dữ liệu ghế gọn nhẹ
+function sendSeatUpdate() {
+    let data = {};
+    for (let s in seatMap) data[s] = seatMap[s].status;
+    io.emit("seat_update", data);
+}
 
-    // Gửi trạng thái ghế khi client mới vào
-    socket.emit("seat_update", seatMap);
+io.on("connection", (socket) => {
+    console.log("Client:", socket.id);
+    sendSeatUpdate();
 
     // Chọn ghế
     socket.on("select_seat", (seat) => {
-        if (seatMap[seat] === "available") {
-            seatMap[seat] = "selected";
-            io.emit("seat_update", seatMap);
+        if (seatMap[seat].status === "available") {
+            seatMap[seat] = {
+                status: "selected",
+                owner: socket.id,
+            };
+            io.emit("notification", `Ghế ${seat} vừa được chọn`);
+            sendSeatUpdate();
         }
     });
 
     // Hủy ghế
     socket.on("cancel_seat", (seat) => {
-        if (seatMap[seat] === "selected") {
-            seatMap[seat] = "available";
-            io.emit("seat_update", seatMap);
+        if (
+            seatMap[seat].status === "selected" &&
+            seatMap[seat].owner === socket.id
+        ) {
+            seatMap[seat] = { status: "available", owner: null };
+            sendSeatUpdate();
         }
     });
 
     // Xác nhận đặt vé
     socket.on("confirm_booking", (seats) => {
         seats.forEach((seat) => {
-            if (seatMap[seat] === "selected") {
-                seatMap[seat] = "booked";
+            if (
+                seatMap[seat].status === "selected" &&
+                seatMap[seat].owner === socket.id
+            ) {
+                seatMap[seat] = { status: "booked", owner: null };
             }
         });
-        io.emit("seat_update", seatMap);
+        io.emit("notification", "Đặt vé thành công");
+        sendSeatUpdate();
     });
 
+    // Client thoát → trả ghế
     socket.on("disconnect", () => {
+        for (let seat in seatMap) {
+            if (seatMap[seat].owner === socket.id) {
+                seatMap[seat] = { status: "available", owner: null };
+            }
+        }
+        sendSeatUpdate();
         console.log("Client disconnected:", socket.id);
     });
 });
 
-server.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+server.listen(3000, () => console.log("Server running at port 3000"));
