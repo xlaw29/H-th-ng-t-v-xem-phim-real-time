@@ -9,26 +9,25 @@ const io = new Server(server, {
 const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const cols = 12;
 
-// seatMap: A1 -> { status, owner }
+// seatMap: A1 -> { status, owner, bookedAt }
 let seatMap = {};
 rows.forEach((r) => {
     for (let i = 1; i <= cols; i++) {
         seatMap[`${r}${i}`] = {
             status: "available",
             owner: null,
+            bookedAt: null,
         };
     }
 });
 
-// Gửi dữ liệu ghế gọn nhẹ
+// ✅ GỬI FULL DATA GHẾ
 function sendSeatUpdate() {
-    let data = {};
-    for (let s in seatMap) data[s] = seatMap[s].status;
-    io.emit("seat_update", data);
+    io.emit("seat_update", seatMap);
 }
 
 io.on("connection", (socket) => {
-    console.log("Client:", socket.id);
+    console.log("Client connected:", socket.id);
     sendSeatUpdate();
 
     // Chọn ghế
@@ -37,19 +36,23 @@ io.on("connection", (socket) => {
             seatMap[seat] = {
                 status: "selected",
                 owner: socket.id,
+                bookedAt: null,
             };
-            io.emit("notification", `Ghế ${seat} vừa được chọn`);
             sendSeatUpdate();
         }
     });
 
-    // Hủy ghế
+    // Hủy ghế đang chọn
     socket.on("cancel_seat", (seat) => {
         if (
             seatMap[seat].status === "selected" &&
             seatMap[seat].owner === socket.id
         ) {
-            seatMap[seat] = { status: "available", owner: null };
+            seatMap[seat] = {
+                status: "available",
+                owner: null,
+                bookedAt: null,
+            };
             sendSeatUpdate();
         }
     });
@@ -61,18 +64,55 @@ io.on("connection", (socket) => {
                 seatMap[seat].status === "selected" &&
                 seatMap[seat].owner === socket.id
             ) {
-                seatMap[seat] = { status: "booked", owner: null };
+                seatMap[seat] = {
+                    status: "booked",
+                    owner: socket.id,
+                    bookedAt: Date.now(), // ⏱ thời điểm đặt
+                };
             }
         });
-        io.emit("notification", "Đặt vé thành công");
+        socket.emit("notification", "🎉 Đặt vé thành công");
         sendSeatUpdate();
     });
 
-    // Client thoát → trả ghế
+    // Hủy vé (trong 5 phút)
+    socket.on("cancel_booking", (seat) => {
+        const seatInfo = seatMap[seat];
+        if (!seatInfo) return;
+
+        if (seatInfo.owner !== socket.id) {
+            socket.emit("notification", "❌ Không có quyền hủy vé");
+            return;
+        }
+
+        const diff = (Date.now() - seatInfo.bookedAt) / 60000;
+        if (diff > 5) {
+            socket.emit("notification", "⏰ Vé đã quá 5 phút");
+            return;
+        }
+
+        seatMap[seat] = {
+            status: "available",
+            owner: null,
+            bookedAt: null,
+        };
+
+        io.emit("notification", `✅ Vé ghế ${seat} đã được hủy`);
+        sendSeatUpdate();
+    });
+
+    // Client thoát → trả ghế đang chọn
     socket.on("disconnect", () => {
         for (let seat in seatMap) {
-            if (seatMap[seat].owner === socket.id) {
-                seatMap[seat] = { status: "available", owner: null };
+            if (
+                seatMap[seat].owner === socket.id &&
+                seatMap[seat].status === "selected"
+            ) {
+                seatMap[seat] = {
+                    status: "available",
+                    owner: null,
+                    bookedAt: null,
+                };
             }
         }
         sendSeatUpdate();
@@ -80,4 +120,6 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3000, () => console.log("Server running at port 3000"));
+server.listen(3000, () =>
+    console.log("🚀 Server running at http://localhost:3000")
+);

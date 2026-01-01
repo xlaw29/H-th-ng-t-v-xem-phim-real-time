@@ -139,9 +139,110 @@ button {
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
-button:hover {
+/* button:hover {
     background: orange;
+} */
+/* ===== VÉ CỦA TÔI ===== */
+#myTickets {
+    max-height: 220px; /* ⭐ bạn có thể chỉnh 180–260px */
+    overflow-y: auto; /* ⭐ hiện thanh cuộn khi vượt */
+    margin-top: 10px;
+    padding-right: 4px;
+}
+#myTickets::-webkit-scrollbar {
+    width: 6px;
+}
+
+#myTickets::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#myTickets::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+#myTickets::-webkit-scrollbar-thumb:hover {
+    background: #ccc;
+}
+
+/* 1 vé */
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f1e25;
+    padding: 10px 12px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    align-content: center;
+    margin-bottom: 4px;
+}
+
+//* 1 vé */
+.ticket-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f1f26;
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+/* bên trái: ghế + time */
+.ticket-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* mã ghế */
+.seat-code {
+    font-weight: 700;
+    color: #fff;
+    min-width: 28px;
+}
+
+/* thời gian */
+.countdown {
+    width: 48px; /* CỐ ĐỊNH ĐỘ RỘNG */
+    text-align: center;
+    font-size: 13px;
+    color: #ffcc00;
+    background: rgba(255, 204, 0, 0.15);
+    padding: 2px 0;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums; /* số đều nhau */
+}
+
+/* nút hủy */
+.cancel-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #ff4d4f;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-left: 8px;
+    width: 100px;
+}
+
+.cancel-btn:hover {
+    background: #ff1f1f;
+}
+
+.cancel-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+.ticket-seat {
+    margin-right: 8px;
+    width: 1000px;
 }
